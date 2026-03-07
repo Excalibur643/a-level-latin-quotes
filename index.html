@@ -1,12 +1,174 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <title>20 Marker Quotes</title>
+
+<title>20 Marker Quote Database</title>
+
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+margin:40px;
+}
+
+h1{
+margin-bottom:20px;
+}
+
+button{
+padding:10px 20px;
+margin:10px;
+font-size:16px;
+cursor:pointer;
+}
+
+#searchBar{
+margin:20px 0;
+padding:8px;
+width:300px;
+font-size:16px;
+}
+
+table{
+border-collapse:collapse;
+width:100%;
+}
+
+th,td{
+border:1px solid #ccc;
+padding:8px;
+text-align:left;
+}
+
+th{
+background-color:#f4f4f4;
+}
+
+#backButton{
+margin-bottom:20px;
+}
+
+</style>
+
 </head>
 
 <body>
 
-<p>Test</p>
+<div id="selection">
+
+<p>Select a text:</p>
+
+<button onclick="loadText('tacitus_quotes.csv','Tacitus Annals')">Tacitus Annals XIII and XIV</button>
+
+<button onclick="loadText('aeneid_quotes.csv','Virgil Aeneid')">Virgil Aeneid II</button>
+
+</div>
+
+<div id="tableView" style="display:none;">
+
+<button id="backButton" onclick="goBack()">← Back</button>
+
+<h2 id="tableTitle"></h2>
+
+<input type="text" id="searchBar" placeholder="Search section or theme..." onkeyup="filterTable()">
+
+<table id="quoteTable">
+
+<thead>
+
+<tr>
+<th>Section</th>
+<th>Quote</th>
+<th>Themes</th>
+<th>Notes</th>
+</tr>
+
+</thead>
+
+<tbody></tbody>
+
+</table>
+
+</div>
+
+<script>
+
+let tableData = []
+
+function loadText(csvFile,title){
+
+document.getElementById("selection").style.display="none"
+document.getElementById("tableView").style.display="block"
+document.getElementById("tableTitle").innerText=title
+
+Papa.parse(csvFile,{
+
+download:true,
+header:true,
+
+complete:function(results){
+
+tableData=results.data
+renderTable(tableData)
+
+}
+
+})
+
+}
+
+function renderTable(data){
+
+let tbody=document.querySelector("#quoteTable tbody")
+tbody.innerHTML=""
+
+data.forEach(row=>{
+
+let tr=document.createElement("tr")
+
+tr.innerHTML=
+
+`<td>${row.section}</td>
+<td>${row.quote}</td>
+<td>${row.themes}</td>
+<td>${row.notes}</td>`
+
+tbody.appendChild(tr)
+
+})
+
+}
+
+function filterTable(){
+
+let query=document.getElementById("searchBar").value.toLowerCase()
+
+let filtered=tableData.filter(row=>{
+
+return(
+row.section.toLowerCase().includes(query) ||
+row.themes.toLowerCase().includes(query)
+)
+
+})
+
+renderTable(filtered)
+
+}
+
+function goBack(){
+
+document.getElementById("tableView").style.display="none"
+document.getElementById("selection").style.display="block"
+document.getElementById("searchBar").value=""
+
+}
+
+</script>
 
 </body>
+
 </html>
