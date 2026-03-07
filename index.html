@@ -12,6 +12,7 @@
 body{
 font-family: Arial, sans-serif;
 margin:40px;
+background:#fafafa;
 }
 
 h1{
@@ -27,24 +28,42 @@ cursor:pointer;
 
 #searchBar{
 margin:20px 0;
-padding:8px;
-width:300px;
+padding:10px;
+width:320px;
 font-size:16px;
 }
 
-table{
-border-collapse:collapse;
-width:100%;
+#cardContainer{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(350px,1fr));
+gap:20px;
 }
 
-th,td{
-border:1px solid #ccc;
-padding:8px;
-text-align:left;
+.card{
+background:white;
+border-radius:10px;
+padding:20px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
 }
 
-th{
-background-color:#f4f4f4;
+.quote{
+font-size:18px;
+margin-bottom:12px;
+}
+
+.meta{
+font-size:14px;
+color:#444;
+margin-top:6px;
+}
+
+.theme{
+display:inline-block;
+background:#e6eefc;
+padding:4px 8px;
+margin:4px 4px 0 0;
+border-radius:6px;
+font-size:13px;
 }
 
 #backButton{
@@ -57,52 +76,60 @@ margin-bottom:20px;
 
 <body>
 
+<h1>Quote Database</h1>
+
 <div id="selection">
 
 <p>Select a text:</p>
 
-<button onclick="loadText('tacitus_quotes.csv','Tacitus Annals')">Tacitus Annals XIII and XIV</button>
+<button onclick="loadText('tacitus_quotes.csv','Tacitus – Annals')">
+Tacitus – Annals
+</button>
 
-<button onclick="loadText('aeneid_quotes.csv','Virgil Aeneid')">Virgil Aeneid II</button>
+<button onclick="loadText('aeneid_quotes.csv','Virgil – Aeneid II')">
+Virgil – Aeneid II
+</button>
 
 </div>
 
-<div id="tableView" style="display:none;">
+<div id="quoteView" style="display:none;">
 
 <button id="backButton" onclick="goBack()">← Back</button>
 
-<h2 id="tableTitle"></h2>
+<h2 id="pageTitle"></h2>
 
-<input type="text" id="searchBar" placeholder="Search section or theme..." onkeyup="filterTable()">
+<input type="text" id="searchBar"
+placeholder="Search section or theme..."
+onkeyup="filterQuotes()">
 
-<table id="quoteTable">
-
-<thead>
-
-<tr>
-<th>Section</th>
-<th>Quote</th>
-<th>Themes</th>
-<th>Notes</th>
-</tr>
-
-</thead>
-
-<tbody></tbody>
-
-</table>
+<div id="cardContainer"></div>
 
 </div>
 
 <script>
 
-let tableData = []
+/* THEME KEY → DESCRIPTION DICTIONARY */
+
+const themeMap = {
+
+"POW":"Agrippina's desire for power",
+"INC":"Nero’s incompetence, ineptitude, reliance on advisors and impotence",
+"HOR":"Horrors and brutality of warfare",
+"VAL":"Valour, patriotism, and courage in battle"
+
+}
+
+/* DATA STORAGE */
+
+let quoteData = []
+
+/* LOAD CSV */
 
 function loadText(csvFile,title){
 
 document.getElementById("selection").style.display="none"
-document.getElementById("tableView").style.display="block"
-document.getElementById("tableTitle").innerText=title
+document.getElementById("quoteView").style.display="block"
+document.getElementById("pageTitle").innerText=title
 
 Papa.parse(csvFile,{
 
@@ -111,8 +138,8 @@ header:true,
 
 complete:function(results){
 
-tableData=results.data
-renderTable(tableData)
+quoteData = results.data
+renderCards(quoteData)
 
 }
 
@@ -120,48 +147,84 @@ renderTable(tableData)
 
 }
 
-function renderTable(data){
+/* PARSE THEMES */
 
-let tbody=document.querySelector("#quoteTable tbody")
-tbody.innerHTML=""
+function parseThemes(themeString){
+
+if(!themeString) return []
+
+return themeString.split(/[;, ]+/).map(key=>{
+
+key = key.trim()
+
+return themeMap[key] || key
+
+})
+
+}
+
+/* CREATE CARDS */
+
+function renderCards(data){
+
+let container=document.getElementById("cardContainer")
+
+container.innerHTML=""
 
 data.forEach(row=>{
 
-let tr=document.createElement("tr")
+let card=document.createElement("div")
+card.className="card"
 
-tr.innerHTML=
+let themes=parseThemes(row.themes)
 
-`<td>${row.section}</td>
-<td>${row.quote}</td>
-<td>${row.themes}</td>
-<td>${row.notes}</td>`
+let themeHTML=themes.map(t=>`<span class="theme">${t}</span>`).join("")
 
-tbody.appendChild(tr)
+card.innerHTML =
+
+`<div class="quote">${row.quote}</div>
+
+<div class="meta"><strong>Section:</strong> ${row.section}</div>
+
+<div class="meta"><strong>Themes:</strong><br>${themeHTML}</div>
+
+<div class="meta"><strong>Notes:</strong> ${row.notes || ""}</div>`
+
+container.appendChild(card)
 
 })
 
 }
 
-function filterTable(){
+/* SEARCH */
+
+function filterQuotes(){
 
 let query=document.getElementById("searchBar").value.toLowerCase()
 
-let filtered=tableData.filter(row=>{
+let filtered = quoteData.filter(row=>{
+
+let themes=parseThemes(row.themes).join(" ").toLowerCase()
 
 return(
+
 row.section.toLowerCase().includes(query) ||
-row.themes.toLowerCase().includes(query)
+
+themes.includes(query)
+
 )
 
 })
 
-renderTable(filtered)
+renderCards(filtered)
 
 }
 
+/* BACK BUTTON */
+
 function goBack(){
 
-document.getElementById("tableView").style.display="none"
+document.getElementById("quoteView").style.display="none"
 document.getElementById("selection").style.display="block"
 document.getElementById("searchBar").value=""
 
@@ -170,5 +233,4 @@ document.getElementById("searchBar").value=""
 </script>
 
 </body>
-
 </html>
