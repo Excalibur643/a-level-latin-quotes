@@ -167,18 +167,20 @@ return themeMap[key] || key
 
 function renderCards(data){
 
-let container=document.getElementById("cardContainer")
+let container = document.getElementById("cardContainer")
 
-container.innerHTML=""
+container.innerHTML = ""
 
-data.forEach(row=>{
+data.forEach(row => {
 
-let card=document.createElement("div")
-card.className="card"
+if(!row.quote) return  // skip empty rows
 
-let themes=parseThemes(row.themes)
+let card = document.createElement("div")
+card.className = "card"
 
-let themeHTML=themes.map(t=>`<span class="theme">${t}</span>`).join("")
+let themes = parseThemes(row.themes)
+
+let themeHTML = themes.map(t => `<span class="theme">${t}</span>`).join("")
 
 card.innerHTML =
 
