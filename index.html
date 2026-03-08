@@ -79,6 +79,23 @@ cursor:pointer;
 transition:background 0.2s;
 }
 
+#themeButtons{
+margin:10px 0 20px 0;
+}
+
+#themeButtons button{
+margin:4px;
+padding:6px 10px;
+border-radius:6px;
+border:none;
+background:#e6eefc;
+cursor:pointer;
+}
+
+#themeButtons button:hover{
+background:#cfdcff;
+}
+
 .theme:hover{
 background:#cfdcff;
 }
@@ -119,6 +136,8 @@ Virgil – Aeneid II
 placeholder="Search section or theme..."
 onkeyup="filterQuotes()">
 
+<div id="themeButtons"></div>
+
 <div id="cardContainer"></div>
 
 </div>
@@ -142,6 +161,15 @@ const themeMap = {
 
 }
 
+const sectionLabels = {
+
+"L":"Latin",
+"E":"English",
+"13":"Book 13"
+"14":"Book 14"
+
+}
+
 /* DATA STORAGE */
 
 let quoteData = []
@@ -162,6 +190,12 @@ header:true,
 complete:function(results){
 
 quoteData = results.data
+  .filter(row => row.quote) // remove empty rows
+  .map(row => ({
+    ...row,
+    parsedThemes: parseThemes(row.themes)
+  }))
+generateThemeButtons()
 renderCards(quoteData)
 
 }
@@ -201,19 +235,25 @@ if(!row.quote) return  // skip empty rows
 let card = document.createElement("div")
 card.className = "card"
 
-let themes = parseThemes(row.themes)
+let themes=row.parsedThemes
 
 let themeHTML=themes.map(t=>`<span class="theme" onclick="filterByTheme('${t}')">${t}</span>`).join("")
 
+let notesHTML = ""
+
+if(row.notes && row.notes.trim() !== ""){
+notesHTML = `<div class="meta"><strong>Notes:</strong> ${row.notes}</div>`
+}
+
 card.innerHTML =
 
-`<div class="quote">${row.quote}</div>
+`<div class="quote">“${row.quote}”</div>
 
-<div class="meta"><strong>Section:</strong> ${row.section}</div>
+<div class="meta"><strong>Section:</strong> ${sectionLabels[row.section] || row.section} ${row.section}</div>
 
 <div class="meta"><strong>Themes:</strong><br>${themeHTML}</div>
 
-<div class="meta"><strong>Notes:</strong> ${row.notes || ""}</div>`
+<div class="meta">${notesHTML}</div>`
 
 container.appendChild(card)
 
@@ -229,7 +269,7 @@ let query=document.getElementById("searchBar").value.toLowerCase()
 
 let filtered = quoteData.filter(row=>{
 
-let themes=parseThemes(row.themes).join(" ").toLowerCase()
+let themes=row.parsedThemes.join(" ").toLowerCase()
 
 return(
 
@@ -251,11 +291,39 @@ let filtered = quoteData.filter(row => {
 
 let themes = parseThemes(row.themes)
 
-return themes.includes(theme)
+document.getElementById("searchBar").value = theme
+
+return row.parsedThemes.includes(theme)
 
 })
 
 renderCards(filtered)
+
+}
+
+function generateThemeButtons(){
+
+let container = document.getElementById("themeButtons")
+
+container.innerHTML = ""
+
+let themeSet = new Set()
+
+quoteData.forEach(row => {
+row.parsedThemes.forEach(t => themeSet.add(t))
+})
+
+themeSet.forEach(theme => {
+
+let btn = document.createElement("button")
+
+btn.innerText = theme
+
+btn.onclick = () => filterByTheme(theme)
+
+container.appendChild(btn)
+
+})
 
 }
 
