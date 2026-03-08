@@ -44,6 +44,17 @@ background:white;
 border-radius:10px;
 padding:20px;
 box-shadow:0 4px 10px rgba(0,0,0,0.08);
+
+opacity:0;
+transform:translateY(10px);
+animation:fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn{
+to{
+opacity:1;
+transform:translateY(0);
+}
 }
 
 .quote{
@@ -64,6 +75,12 @@ padding:4px 8px;
 margin:4px 4px 0 0;
 border-radius:6px;
 font-size:13px;
+cursor:pointer;
+transition:background 0.2s;
+}
+
+.theme:hover{
+background:#cfdcff;
 }
 
 #backButton{
@@ -115,7 +132,13 @@ const themeMap = {
 "POW":"Agrippina's desire for power",
 "INC":"Nero’s incompetence, ineptitude, reliance on advisors and impotence",
 "HOR":"Horrors and brutality of warfare",
-"VAL":"Valour, patriotism, and courage in battle"
+"VAL":"Valour, patriotism, and courage in battle",
+"PER":"Personal grief",
+"FAT":"Fate and the intervention of the gods",
+"MOR":"Morality in warfare: deception and revenge",
+"FUT":"Futility and weakness of the Trojans",
+"INN":"Violation of innocents (women etc.) and sacred sites",
+"LEG":"Loss of the Trojan’s legacy"
 
 }
 
@@ -180,7 +203,7 @@ card.className = "card"
 
 let themes = parseThemes(row.themes)
 
-let themeHTML = themes.map(t => `<span class="theme">${t}</span>`).join("")
+let themeHTML=themes.map(t=>`<span class="theme" onclick="filterByTheme('${t}')">${t}</span>`).join("")
 
 card.innerHTML =
 
@@ -215,6 +238,20 @@ row.section.toLowerCase().includes(query) ||
 themes.includes(query)
 
 )
+
+})
+
+renderCards(filtered)
+
+}
+
+function filterByTheme(theme){
+
+let filtered = quoteData.filter(row => {
+
+let themes = parseThemes(row.themes)
+
+return themes.includes(theme)
 
 })
 
