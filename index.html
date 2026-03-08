@@ -104,6 +104,42 @@ background:#cfdcff;
 margin-bottom:20px;
 }
 
+#sectionStats{
+margin:10px 0 20px 0;
+max-width:500px;
+}
+
+.statRow{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.statLabel{
+font-size:14px;
+width:70px;
+text-align:center;
+}
+
+.statBar{
+flex:1;
+height:14px;
+background:#eee;
+border-radius:8px;
+overflow:hidden;
+display:flex;
+}
+
+.statBlue{
+background:#4a90e2;
+height:100%;
+}
+
+.statRed{
+background:#e24a4a;
+height:100%;
+}
+
 </style>
 
 </head>
@@ -131,6 +167,8 @@ Virgil – Aeneid II
 <button id="backButton" onclick="goBack()">← Back</button>
 
 <h2 id="pageTitle"></h2>
+
+<div id="sectionStats"></div>
 
 <input type="text" id="searchBar"
 placeholder="Search section or theme..."
@@ -196,6 +234,7 @@ quoteData = results.data
     parsedThemes: parseThemes(row.themes)
   }))
 generateThemeButtons()
+generateSectionStats()
 renderCards(quoteData)
 
 }
@@ -325,6 +364,58 @@ container.appendChild(btn)
 
 })
 
+}
+
+function generateSectionStats(){
+
+let container = document.getElementById("sectionStats")
+
+let blueCount = 0
+let redCount = 0
+
+quoteData.forEach(row => {
+
+if(row.section === "E" || row.section === "13"){
+blueCount++
+
+}else if(row.section === "L" || row.section === "14"){
+redCount++
+}
+
+})
+
+let total = blueCount + redCount
+
+if(total === 0){
+container.innerHTML = ""
+return
+}
+
+let bluePercent = Math.round((blueCount / total) * 100)
+let redPercent = 100 - bluePercent
+
+let blueLabel = (quoteData[0].section === "13" || quoteData[0].section === "14")
+? "Book 13"
+: "English"
+
+let redLabel = (quoteData[0].section === "13" || quoteData[0].section === "14")
+? "Book 14"
+: "Latin"
+
+container.innerHTML =
+
+`<div class="statRow">
+
+<span class="statLabel">${bluePercent}%<br>${blueLabel}</span>
+
+<div class="statBar">
+<div class="statBlue" style="width:${bluePercent}%"></div>
+<div class="statRed" style="width:${redPercent}%"></div>
+</div>
+
+<span class="statLabel">${redPercent}%<br>${redLabel}</span>
+
+</div>`
 }
 
 /* BACK BUTTON */
