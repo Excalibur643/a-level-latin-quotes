@@ -34,11 +34,8 @@ font-size:16px;
 }
 
 #cardContainer{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(350px,1fr));
-gap:20px;
-grid-auto-flow:dense;
-align-items:start;
+column-width:350px;
+column-gap:20px;
 }
 
 .card{
@@ -47,7 +44,7 @@ border-radius:10px;
 padding:20px;
 box-shadow:0 4px 10px rgba(0,0,0,0.08);
 
-/*break-inside:avoid;*/
+break-inside:avoid;
 margin-bottom:20px;
 
 opacity:0;
