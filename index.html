@@ -176,6 +176,10 @@ Virgil – Aeneid II
 placeholder="Search section or theme..."
 onkeyup="filterQuotes()">
 
+<button onclick="toggleRandom()" id="randomButton">
+Random Order: OFF
+</button>
+
 <div id="themeButtons"></div>
 
 <div id="cardContainer"></div>
@@ -217,6 +221,8 @@ const sectionLabels = {
 /* DATA STORAGE */
 
 let quoteData = []
+
+let randomMode = false
 
 /* LOAD CSV */
 
@@ -272,6 +278,10 @@ function renderCards(data){
 let container = document.getElementById("cardContainer")
 
 container.innerHTML = ""
+
+if(randomMode){
+data = shuffleArray(data)
+}
 
 data.forEach((row, index) => {
 
@@ -334,17 +344,18 @@ return Math.max(columns,1)
 
 function filterQuotes(){
 
-let query=document.getElementById("searchBar").value.toLowerCase()
+let query = document.getElementById("searchBar").value.toLowerCase()
 
 let filtered = quoteData.filter(row=>{
 
-let themes=row.parsedThemes.join(" ").toLowerCase()
+let themes = row.parsedThemes.join(" ").toLowerCase()
+let quoteText = row.quote.toLowerCase()
 
 return(
 
 row.section.toLowerCase().includes(query) ||
-
-themes.includes(query)
+themes.includes(query) ||
+quoteText.includes(query)
 
 )
 
@@ -446,6 +457,36 @@ container.innerHTML =
 <span class="statLabel">${redPercent}%<br>${redLabel}</span>
 
 </div>`
+}
+
+function toggleRandom(){
+
+randomMode = !randomMode
+
+let btn = document.getElementById("randomButton")
+
+btn.innerText = randomMode ? "Random Order: ON" : "Random Order: OFF"
+
+filterQuotes()
+
+}
+
+function shuffleArray(array){
+
+let shuffled = [...array]
+
+for(let i = shuffled.length - 1; i > 0; i--){
+
+let j = Math.floor(Math.random() * (i + 1))
+
+let temp = shuffled[i]
+shuffled[i] = shuffled[j]
+shuffled[j] = temp
+
+}
+
+return shuffled
+
 }
 
 /* BACK BUTTON */
