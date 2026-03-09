@@ -279,10 +279,13 @@ if(!row.quote) return  // skip empty rows
 
 let card = document.createElement("div")
 card.className = "card"
+  
 let columns = getColumnCount()
-let rows = Math.floor(index / columns)
-let cols = index % columns
-let visualIndex = cols + rows * columns
+
+let ind_col = Math.floor(index / columns)
+let ind_row = index % columns
+
+let visualIndex = ind_row * columns + ind_col
 
 card.style.animationDelay = (visualIndex * 0.05) + "s"
 
@@ -321,7 +324,9 @@ let containerWidth = container.offsetWidth
 let columnWidth = 350
 let columnGap = 20
 
-return Math.max(1, Math.floor((containerWidth + columnGap) / (columnWidth + columnGap)))
+let columns = Math.floor((containerWidth + columnGap) / (columnWidth + columnGap))
+
+return Math.max(columns,1)
 
 }
 
