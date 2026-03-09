@@ -279,7 +279,12 @@ if(!row.quote) return  // skip empty rows
 
 let card = document.createElement("div")
 card.className = "card"
-card.style.animationDelay = (index * 0.05) + "s"
+let columns = getColumnCount()
+let row = Math.floor(index / columns)
+let col = index % columns
+let visualIndex = col + row * columns
+
+card.style.animationDelay = (visualIndex * 0.05) + "s"
 
 let themes=row.parsedThemes
 
@@ -304,6 +309,19 @@ card.innerHTML =
 container.appendChild(card)
 
 })
+
+}
+
+function getColumnCount(){
+
+let container = document.getElementById("cardContainer")
+
+let containerWidth = container.offsetWidth
+
+let columnWidth = 350
+let columnGap = 20
+
+return Math.max(1, Math.floor((containerWidth + columnGap) / (columnWidth + columnGap)))
 
 }
 
