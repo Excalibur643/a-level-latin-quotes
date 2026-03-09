@@ -280,9 +280,9 @@ if(!row.quote) return  // skip empty rows
 let card = document.createElement("div")
 card.className = "card"
 let columns = getColumnCount()
-let row = Math.floor(index / columns)
-let col = index % columns
-let visualIndex = col + row * columns
+let rows = Math.floor(index / columns)
+let cols = index % columns
+let visualIndex = cols + rows * columns
 
 card.style.animationDelay = (visualIndex * 0.05) + "s"
 
