@@ -25,9 +25,8 @@ E,This was the cruellest thing I saw in all the sack of the city [losing Creusa]
 E,"Grief-stricken I called [Creusa’s] name … again and again, but there was no answer",HOR;INN;PER,
 L,"We were swept along in the fighting, Iphitus and Pelias with me. Iphitus was no longer young and Pelias and been slowed by a wound",VAL;FUT,
 L,Rolling down on the heads of their enemies the gilded beams and richly ornamented ceilings of their ancestors.,HOR;LEG,
-E,No man could speak of such things [destruction of Troy] and not weep.,HOR,
 E,The last agony of Troy,HOR,
-E,Who could speak of such slaughter? Who could weep tears to match that suffering?,HOR,
+E,Who could speak of such slaughter? Who could weep tears to match that suffering? No man could speak of such things [destruction of Troy] and not weep.,HOR,
 E,Everywhere there was fear and death in many forms.,HOR,
 E,Why do you choose to give yourself to such wild grief?,PER,Creusa’s apparition to Aeneas
 E,Wipe away the tears you are shedding for Creusa whom you loved,INN;PER,
@@ -65,3 +64,10 @@ L,"Fortune gave us a fair wind for our first efforts",FAT,
 L,"But no man can put trust in gods who are opposed to him.",FAT;FUT,
 L,"It was as though a whirlwind had burst and opposing winds were clashing.",,Greek soldiers charging after the rescue of Cassandra
 L,"I call to witness the ashes of Troy. I call upon the flames in which my people died. In the hour of your fall I did not flinch from the weapons of the Greeks or from anything they could do. If it had been my fate to fall, my right hand fully earned it.",VAL,
+L,Pyrrhus pressed on with the violence of his father,HOR,
+L,"[Hecuba to Priam] This is madness. Why have you put on this armour? Where can you go? This is not the sort of help we need. Your are not the defender we are looking for ... this altar will protect us all, or you will die with us.",VAL;FUT;INN,
+E,"Neptune has loosened the foundations with his great trident and is shaking the walls, tearing up your whole city from the place it is set.",FAT;FUT,Venus speaking to Aeneas
+E,"I seemed to see the whole of Ilium settling into the flames and Neptune's Troy toppling over from its foundations like an ancient ash tree",HOR,
+E,"I rushed to take up arms again in complete despair. Death was the only thing I could hope for.",VAL,Aeneas after Anchises tells him that he will not abandon Troy.
+E,"Let me go back and rejoin the battle. Today we die. But not all of us shall die unavenged.",VAL,Aeneas calling out to Venus to defy her order to escape the city.
+E,"So anxious was I, so afraid both for the man I carried [Anchises] and the child [Iulus] at my side.",,Pietas
